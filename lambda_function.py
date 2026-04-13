@@ -1,5 +1,5 @@
 def lambda_handler(event, context):
     return {
         "statusCode": 200,
-        "body": "Hello from CI/CD version 2 🚀"
+        "body": "Hello from CI/CD new version 3🚀"
     }
