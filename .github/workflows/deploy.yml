@@ -1,0 +1,33 @@
+name: Deploy Lambda
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🔐 Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::359077243653:role/service-role/chatbot_cicd_pipeline-role-5z74ohst
+          aws-region: us-east-1   # IMPORTANT (your lambda region)
+
+      - name: 🗜️ Zip Lambda code
+        run: zip -r function.zip .
+
+      - name: 🚀 Deploy to Lambda
+        run: |
+          aws lambda update-function-code \
+            --function-name chatbot_cicd_pipeline \
+            --zip-file fileb://function.zip
